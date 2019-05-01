@@ -31,7 +31,7 @@ public class InvTweaksConst {
     public static final int TOOLTIP_DELAY = 800;
 
     // File constants
-    public static final File MINECRAFT_DIR = MinecraftClient.getMinecraft().runDirectory;
+    public static final File MINECRAFT_DIR = MinecraftClient.getInstance().runDirectory;
     public static final File MINECRAFT_CONFIG_DIR = new File(MINECRAFT_DIR, "config/");
     public static final File CONFIG_PROPS_FILE = new File(MINECRAFT_CONFIG_DIR, "InvTweaks.cfg");
     public static final File CONFIG_RULES_FILE = new File(MINECRAFT_CONFIG_DIR, "InvTweaksRules.txt");

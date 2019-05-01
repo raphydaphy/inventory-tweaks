@@ -1,6 +1,8 @@
 package invtweaks;
 
 import invtweaks.api.container.ContainerSection;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.ContainerScreen;
@@ -96,7 +98,7 @@ public class InvTweaksObfuscation {
     }
 
     @Nullable
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static Slot getSlotAtMousePosition(@Nullable ContainerScreen guiContainer) {
         // Copied from GuiContainer
         if(guiContainer != null) {
@@ -116,7 +118,7 @@ public class InvTweaksObfuscation {
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     private static boolean getIsMouseOverSlot(@Nullable ContainerScreen guiContainer, @NotNull Slot slot, int x, int y) {
         // Copied from GuiContainer
         if(guiContainer != null) {
@@ -128,12 +130,12 @@ public class InvTweaksObfuscation {
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     private static int getMouseX(@NotNull ContainerScreen guiContainer) {
         return (Mouse.getEventX() * guiContainer.width) / getDisplayWidth();
     }
 
-    @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     private static int getMouseY(@NotNull ContainerScreen guiContainer) {
         return guiContainer.height -
                 (Mouse.getEventY() * guiContainer.height) / getDisplayHeight() - 1;

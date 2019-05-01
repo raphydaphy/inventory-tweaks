@@ -10,7 +10,9 @@ import invtweaks.container.IContainerManager;
 import invtweaks.forge.InvTweaksMod;
 import invtweaks.integration.ItemListChecker;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.audio.PositionedSoundInstance;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundInstance;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.CraftingTableScreen;
@@ -24,6 +26,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
@@ -1031,8 +1034,8 @@ public class InvTweaks extends InvTweaksObfuscation {
     private void playClick() {
         if(!cfgManager.getConfig().getProperty(InvTweaksConfig.PROP_ENABLE_SOUNDS)
                 .equals(InvTweaksConfig.VALUE_FALSE)) {
-            mc.getSoundHandler()
-                    .playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.field_15015, 1.0F));
+            mc.getSoundManager()
+                    .play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1));
         }
     }
 

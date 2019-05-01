@@ -8,6 +8,7 @@ import invtweaks.api.container.ContainerSection;
 import invtweaks.network.ITMessageToMessageCodec;
 import invtweaks.network.ITPacketHandlerServer;
 import invtweaks.network.packets.ITPacketLogin;
+import net.fabricmc.api.EnvType;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumMap;
 
 public class CommonProxy implements InvTweaksAPI {
-    protected static EnumMap<Side, FMLEmbeddedChannel> invtweaksChannel;
+    protected static EnumMap<EnvType, FMLEmbeddedChannel> invtweaksChannel;
     @Nullable
     private static MinecraftServer server;
 
@@ -105,7 +106,6 @@ public class CommonProxy implements InvTweaksAPI {
     public void sort(ContainerSection section, SortingMethod method) {
     }
 
-    @SubscribeEvent
     public void onPlayerLoggedIn(@NotNull PlayerEvent.PlayerLoggedInEvent e) {
         FMLEmbeddedChannel channel = invtweaksChannel.get(Side.SERVER);
 

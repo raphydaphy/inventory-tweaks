@@ -7,6 +7,7 @@ import invtweaks.api.container.ContainerSection;
 import invtweaks.network.ITPacketHandlerClient;
 import invtweaks.network.packets.ITPacketClick;
 import invtweaks.network.packets.ITPacketSortComplete;
+import net.fabricmc.api.EnvType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -92,9 +93,9 @@ public class ClientProxy extends CommonProxy {
                           @NotNull PlayerEntity player) {
         //int modiferKeys = (shiftHold) ? 1 : 0 /* XXX Placeholder */;
         if(serverSupportEnabled) {
-            player.container.slotClick(slot, data, action, player);
+            player.container.onSlotClick(slot, data, action, player);
 
-            invtweaksChannel.get(Side.CLIENT).writeOutbound(new ITPacketClick(slot, data, action, windowId));
+            invtweaksChannel.get(EnvType.CLIENT).writeOutbound(new ITPacketClick(slot, data, action, windowId));
         } else {
             playerController.windowClick(windowId, slot, data, action, player);
         }
@@ -151,7 +152,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void addClientScheduledTask(@NotNull Runnable task) {
-        MinecraftClient.getMinecraft().addScheduledTask(task);
+        MinecraftClient.getInstance().addScheduledTask(task);
     }
 
     @SubscribeEvent

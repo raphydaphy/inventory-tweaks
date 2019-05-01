@@ -198,7 +198,7 @@ public class InvTweaksItemTree implements IItemTree {
 
         // Filter items that don't match extra data
         if(extra != null && !items.isEmpty()) {
-            items.stream().filter(item -> !TagHelper.areNBTEquals(item.getExtraData(), extra, true)).forEach(filteredItems::remove);
+            items.stream().filter(item -> !TagHelper.areTagsEqual(item.getExtraData(), extra, true)).forEach(filteredItems::remove);
         }
 
         // If there's no matching item, create new ones
