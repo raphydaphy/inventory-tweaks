@@ -1,9 +1,9 @@
 package invtweaks.network.packets;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.listener.PacketListener;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class ITPacketSortComplete implements ITPacket {
@@ -18,12 +18,12 @@ public class ITPacketSortComplete implements ITPacket {
     }
 
     @Override
-    public void handle(INetHandler handler) {
-        if(handler instanceof NetHandlerPlayServer) {
-            @NotNull NetHandlerPlayServer serverHandler = (NetHandlerPlayServer) handler;
-            EntityPlayerMP player = serverHandler.player;
+    public void handle(PacketListener handler) {
+        if(handler instanceof ServerPlayNetworkHandler) {
+            @NotNull ServerPlayNetworkHandler serverHandler = (ServerPlayNetworkHandler) handler;
+            ServerPlayerEntity player = serverHandler.player;
 
-            player.sendContainerToPlayer(player.openContainer);
+            player.sendContainerToPlayer(player.container);
         }
     }
 }

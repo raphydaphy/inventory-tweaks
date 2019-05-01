@@ -6,9 +6,8 @@ import invtweaks.api.IItemTreeCategory;
 import invtweaks.api.IItemTreeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.TagHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
@@ -178,7 +177,7 @@ public class InvTweaksItemTree implements IItemTree {
 
     @NotNull
     @Override
-    public List<IItemTreeItem> getItems(@Nullable String id, int damage, @Nullable NBTTagCompound extra) {
+    public List<IItemTreeItem> getItems(@Nullable String id, int damage, @Nullable CompoundTag extra) {
         if(id == null) {
             return new ArrayList<>();
         }
@@ -199,7 +198,7 @@ public class InvTweaksItemTree implements IItemTree {
 
         // Filter items that don't match extra data
         if(extra != null && !items.isEmpty()) {
-            items.stream().filter(item -> !NBTUtil.areNBTEquals(item.getExtraData(), extra, true)).forEach(filteredItems::remove);
+            items.stream().filter(item -> !TagHelper.areNBTEquals(item.getExtraData(), extra, true)).forEach(filteredItems::remove);
         }
 
         // If there's no matching item, create new ones
@@ -265,7 +264,7 @@ public class InvTweaksItemTree implements IItemTree {
 
     @NotNull
     @Override
-    public IItemTreeItem addItem(String parentCategory, String name, String id, int damage, NBTTagCompound extra, int order)
+    public IItemTreeItem addItem(String parentCategory, String name, String id, int damage, CompoundTag extra, int order)
             throws NullPointerException {
         @NotNull InvTweaksItemTreeItem addedItem = new InvTweaksItemTreeItem(name, id, damage, extra, order);
         addItem(parentCategory, addedItem);

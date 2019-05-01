@@ -1,8 +1,8 @@
 package invtweaks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Jimeo Wan
  */
-public class InvTweaksGuiTooltipButton extends GuiButton {
+public class InvTweaksGuiTooltipButton extends ButtonWidget {
     public final static int LINE_HEIGHT = 11;
 
     private int hoverTime = 0;
@@ -48,11 +48,11 @@ public class InvTweaksGuiTooltipButton extends GuiButton {
     }
 
     @Override
-    public void drawButton(@NotNull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+    public void drawButton(@NotNull MinecraftClient mc, int mouseX, int mouseY, float partialTicks) {
         if(this.drawBackground) {
             super.drawButton(mc, mouseX, mouseY, partialTicks);
         } else {
-            this.drawString(mc.fontRenderer, this.displayString, this.x,
+            this.drawString(mc.textRenderer, this.displayString, this.x,
                     this.y + (this.height - 8) / 2, 0x999999);
         }
 
@@ -74,7 +74,7 @@ public class InvTweaksGuiTooltipButton extends GuiButton {
             // Draw tooltip if hover time is long enough
             if(hoverTime > InvTweaksConst.TOOLTIP_DELAY && tooltipLines != null) {
 
-                FontRenderer fontRenderer = obf.getFontRenderer();
+                TextRenderer fontRenderer = obf.getFontRenderer();
 
                 // Compute tooltip params
                 int x = mouseX + 12, y = mouseY - LINE_HEIGHT * tooltipLines.length;

@@ -1,9 +1,9 @@
 package invtweaks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Jimeo Wan
  */
 public class InvTweaksGuiModNotWorking extends InvTweaksGuiSettingsAbstract {
-    public InvTweaksGuiModNotWorking(Minecraft mc_, GuiScreen parentScreen_, InvTweaksConfig config_) {
+    public InvTweaksGuiModNotWorking(MinecraftClient mc_, Screen parentScreen_, InvTweaksConfig config_) {
         super(mc_, parentScreen_, config_);
     }
 
@@ -32,7 +32,7 @@ public class InvTweaksGuiModNotWorking extends InvTweaksGuiSettingsAbstract {
     }
 
     @Override
-    protected void actionPerformed(@NotNull GuiButton guibutton) {
+    protected void actionPerformed(@NotNull ButtonWidget guibutton) {
         // GuiButton
         switch(guibutton.id) {
             // Back to main settings screen

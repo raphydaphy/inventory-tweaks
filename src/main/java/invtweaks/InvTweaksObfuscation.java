@@ -1,25 +1,25 @@
 package invtweaks;
 
 import invtweaks.api.container.ContainerSection;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.client.gui.inventory.GuiEditSign;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.ingame.CreativePlayerInventoryScreen;
+import net.minecraft.client.gui.ingame.EditSignScreen;
+import net.minecraft.client.gui.ingame.PlayerInventoryScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.container.Container;
+import net.minecraft.container.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.text.StringTextComponent;
+import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,9 +41,9 @@ import java.util.Map;
 public class InvTweaksObfuscation {
 
     private static final Logger log = InvTweaks.log;
-    public Minecraft mc;
+    public MinecraftClient mc;
 
-    public InvTweaksObfuscation(Minecraft mc_) {
+    public InvTweaksObfuscation(MinecraftClient mc_) {
         mc = mc_;
     }
 
@@ -74,17 +74,17 @@ public class InvTweaksObfuscation {
     @NotNull
     public static ItemStack getSlotStack(@NotNull Container container, int i) {
         // Slot
-        Slot slot = container.inventorySlots.get(i);
+        Slot slot = container.slotList.get(i);
         return (slot == null) ? ItemStack.EMPTY : slot.getStack(); // getStack
     }
 
     public static int getSlotNumber(Slot slot) {
         try {
             // Creative slots don't set the "slotNumber" property, serve as a proxy for true slots
-            if(slot instanceof GuiContainerCreative.CreativeSlot) {
-                Slot underlyingSlot = ((GuiContainerCreative.CreativeSlot) slot).slot;
+            if(slot instanceof CreativePlayerInventoryScreen.CreativeSlot) {
+                Slot underlyingSlot = ((CreativePlayerInventoryScreen.CreativeSlot) slot).slot;
                 if(underlyingSlot != null) {
-                    return underlyingSlot.slotNumber;
+                    return underlyingSlot.id;
                 } else {
                     log.warn("Creative inventory: Failed to get real slot");
                 }
@@ -92,20 +92,20 @@ public class InvTweaksObfuscation {
         } catch(Exception e) {
             log.warn("Failed to access creative slot number");
         }
-        return slot.slotNumber;
+        return slot.id;
     }
 
     @Nullable
     @SideOnly(Side.CLIENT)
-    public static Slot getSlotAtMousePosition(@Nullable GuiContainer guiContainer) {
+    public static Slot getSlotAtMousePosition(@Nullable ContainerScreen guiContainer) {
         // Copied from GuiContainer
         if(guiContainer != null) {
-            Container container = guiContainer.inventorySlots;
+            Container container = guiContainer.container;
 
             int x = getMouseX(guiContainer);
             int y = getMouseY(guiContainer);
-            for(int k = 0; k < container.inventorySlots.size(); k++) {
-                Slot slot = container.inventorySlots.get(k);
+            for(int k = 0; k < container.slotList.size(); k++) {
+                Slot slot = container.slotList.get(k);
                 if(getIsMouseOverSlot(guiContainer, slot, x, y)) {
                     return slot;
                 }
@@ -117,24 +117,24 @@ public class InvTweaksObfuscation {
     }
 
     @SideOnly(Side.CLIENT)
-    private static boolean getIsMouseOverSlot(@Nullable GuiContainer guiContainer, @NotNull Slot slot, int x, int y) {
+    private static boolean getIsMouseOverSlot(@Nullable ContainerScreen guiContainer, @NotNull Slot slot, int x, int y) {
         // Copied from GuiContainer
         if(guiContainer != null) {
-            x -= guiContainer.guiLeft;
-            y -= guiContainer.guiTop;
-            return x >= slot.xPos - 1 && x < slot.xPos + 16 + 1 && y >= slot.yPos - 1 && y < slot.yPos + 16 + 1;
+            x -= guiContainer.left;
+            y -= guiContainer.top;
+            return x >= slot.xPosition - 1 && x < slot.xPosition + 16 + 1 && y >= slot.yPosition - 1 && y < slot.yPosition + 16 + 1;
         } else {
             return false;
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private static int getMouseX(@NotNull GuiContainer guiContainer) {
+    private static int getMouseX(@NotNull ContainerScreen guiContainer) {
         return (Mouse.getEventX() * guiContainer.width) / getDisplayWidth();
     }
 
     @SideOnly(Side.CLIENT)
-    private static int getMouseY(@NotNull GuiContainer guiContainer) {
+    private static int getMouseY(@NotNull ContainerScreen guiContainer) {
         return guiContainer.height -
                 (Mouse.getEventY() * guiContainer.height) / getDisplayHeight() - 1;
     }
@@ -187,43 +187,43 @@ public class InvTweaksObfuscation {
     }
 
     public static boolean isGuiContainer(@Nullable Object o) { // GuiContainer (abstract class)
-        return o != null && o instanceof GuiContainer;
+        return o != null && o instanceof ContainerScreen;
     }
 
     public static boolean isGuiInventoryCreative(@Nullable Object o) { // GuiInventoryCreative
-        return o != null && o.getClass().equals(GuiContainerCreative.class);
+        return o != null && o.getClass().equals(CreativePlayerInventoryScreen.class);
     }
 
     public static boolean isGuiInventory(@Nullable Object o) { // GuiInventory
-        return o != null && o.getClass().equals(GuiInventory.class);
+        return o != null && o.getClass().equals(PlayerInventoryScreen.class);
     }
 
     public static boolean isGuiButton(@Nullable Object o) { // GuiButton
-        return o != null && o instanceof GuiButton;
+        return o != null && o instanceof ButtonWidget;
     }
 
     // FontRenderer members
 
     public static boolean isGuiEditSign(@Nullable Object o) {
-        return o != null && o.getClass().equals(GuiEditSign.class);
+        return o != null && o.getClass().equals(EditSignScreen.class);
     }
 
     public static boolean isItemArmor(@Nullable Object o) { // ItemArmor
-        return o != null && o instanceof ItemArmor;
+        return o != null && o instanceof ArmorItem;
     }
 
     public static boolean isBasicSlot(@Nullable Object o) { // Slot
         return o != null && (o.getClass()
-                .equals(Slot.class) || o.getClass().equals(GuiContainerCreative.CreativeSlot.class));
+                .equals(Slot.class) || o.getClass().equals(CreativePlayerInventoryScreen.CreativeSlot.class));
     }
 
     // Container members
 
     public static Container getCurrentContainer() {
-        Minecraft mc = FMLClientHandler.instance().getClient();
-        Container currentContainer = mc.player.inventoryContainer;
+        MinecraftClient mc = FMLClientHandler.instance().getClient();
+        Container currentContainer = mc.player.playerContainer;
         if(InvTweaksObfuscation.isGuiContainer(mc.currentScreen)) {
-            currentContainer = ((GuiContainer) mc.currentScreen).inventorySlots;
+            currentContainer = ((ContainerScreen) mc.currentScreen).container;
         }
 
         return currentContainer;
@@ -245,34 +245,34 @@ public class InvTweaksObfuscation {
     }
 
     public void addChatMessage(@NotNull String message) {
-        if(mc.ingameGUI != null) {
-            mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString(message));
+        if(mc.inGameHud != null) {
+            mc.inGameHud.getChatGUI().printChatMessage(new StringTextComponent(message));
         }
     }
 
-    public EntityPlayer getThePlayer() {
+    public PlayerEntity getThePlayer() {
         return mc.player;
     }
 
-    public PlayerControllerMP getPlayerController() {
-        return mc.playerController;
+    public ClientPlayerInteractionManager getPlayerController() {
+        return mc.interactionManager;
     }
 
     @Nullable
-    public GuiScreen getCurrentScreen() {
+    public Screen getCurrentScreen() {
         return mc.currentScreen;
     }
 
-    public FontRenderer getFontRenderer() {
-        return mc.fontRenderer;
+    public TextRenderer getFontRenderer() {
+        return mc.textRenderer;
     }
 
-    public void displayGuiScreen(GuiScreen parentScreen) {
+    public void displayGuiScreen(Screen parentScreen) {
         mc.displayGuiScreen(parentScreen);
     }
 
     public GameSettings getGameSettings() {
-        return mc.gameSettings;
+        return mc.options;
     }
 
     public int getKeyBindingForwardKeyCode() {
@@ -285,12 +285,12 @@ public class InvTweaksObfuscation {
         return getGameSettings().keyBindBack.keyCode;
     }
 
-    public InventoryPlayer getInventoryPlayer() { // InventoryPlayer
+    public PlayerInventory getInventoryPlayer() { // InventoryPlayer
         return getThePlayer().inventory;
     }
 
-    public NonNullList<ItemStack> getMainInventory() {
-        return getInventoryPlayer().mainInventory;
+    public DefaultedList<ItemStack> getMainInventory() {
+        return getInventoryPlayer().main;
     }
 
     @NotNull
@@ -304,10 +304,10 @@ public class InvTweaksObfuscation {
     }
 
     public int getFocusedSlot() {
-        return getInventoryPlayer().currentItem; // currentItem
+        return getInventoryPlayer().selectedSlot; // currentItem
     }
 
-    public boolean hasTexture(@NotNull ResourceLocation texture) {
+    public boolean hasTexture(@NotNull Identifier texture) {
         try {
             mc.getResourceManager().getResource(texture);
         } catch(IOException e) {
@@ -318,6 +318,6 @@ public class InvTweaksObfuscation {
 
     @NotNull
     public ItemStack getOffhandStack() {
-        return getInventoryPlayer().offHandInventory.get(0);
+        return getInventoryPlayer().offHand.get(0);
     }
 }

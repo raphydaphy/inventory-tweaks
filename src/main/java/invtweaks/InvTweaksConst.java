@@ -1,7 +1,7 @@
 package invtweaks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Level;
 
@@ -31,7 +31,7 @@ public class InvTweaksConst {
     public static final int TOOLTIP_DELAY = 800;
 
     // File constants
-    public static final File MINECRAFT_DIR = Minecraft.getMinecraft().mcDataDir;
+    public static final File MINECRAFT_DIR = MinecraftClient.getMinecraft().runDirectory;
     public static final File MINECRAFT_CONFIG_DIR = new File(MINECRAFT_DIR, "config/");
     public static final File CONFIG_PROPS_FILE = new File(MINECRAFT_CONFIG_DIR, "InvTweaks.cfg");
     public static final File CONFIG_RULES_FILE = new File(MINECRAFT_CONFIG_DIR, "InvTweaksRules.txt");
@@ -40,9 +40,9 @@ public class InvTweaksConst {
     public static final File OLDER_CONFIG_RULES_FILE = new File(MINECRAFT_DIR, "InvTweaksRules.txt");
 
     public static final String INVTWEAKS_RESOURCE_DOMAIN = "inventorytweaks";
-    public static final ResourceLocation DEFAULT_CONFIG_FILE = new ResourceLocation(INVTWEAKS_RESOURCE_DOMAIN,
+    public static final Identifier DEFAULT_CONFIG_FILE = new Identifier(INVTWEAKS_RESOURCE_DOMAIN,
             "defaultconfig.dat");
-    public static final ResourceLocation DEFAULT_CONFIG_TREE_FILE = new ResourceLocation(INVTWEAKS_RESOURCE_DOMAIN,
+    public static final Identifier DEFAULT_CONFIG_TREE_FILE = new Identifier(INVTWEAKS_RESOURCE_DOMAIN,
             "itemtree.xml");
 
     public static final String HELP_URL = "http://inventory-tweaks.readthedocs.org";

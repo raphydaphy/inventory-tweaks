@@ -5,12 +5,12 @@ import invtweaks.api.SortingMethod;
 import invtweaks.api.container.ContainerSection;
 import invtweaks.container.ContainerSectionManager;
 import invtweaks.container.IContainerManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Slot;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.container.Slot;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public class InvTweaksHandlerSorting extends InvTweaksObfuscation {
     @Nullable
     private boolean[] frozenSlots;
 
-    public InvTweaksHandlerSorting(Minecraft mc_, @NotNull InvTweaksConfig config, ContainerSection section, SortingMethod algorithm_,
+    public InvTweaksHandlerSorting(MinecraftClient mc_, @NotNull InvTweaksConfig config, ContainerSection section, SortingMethod algorithm_,
                                    int rowSize) throws Exception {
         super(mc_);
 
@@ -306,7 +306,7 @@ public class InvTweaksHandlerSorting extends InvTweaksObfuscation {
         if(sortArmorParts) {
             if(isItemArmor(fromItem)) {
                 // ItemArmor
-                @NotNull ItemArmor fromItemArmor = (ItemArmor) fromItem;
+                @NotNull ArmorItem fromItemArmor = (ArmorItem) fromItem;
                 if(globalContainer.hasSection(ContainerSection.ARMOR)) {
                     List<Slot> armorSlots = globalContainer.getSlots(ContainerSection.ARMOR);
                     for(@NotNull Slot slot : armorSlots) {
@@ -319,10 +319,10 @@ public class InvTweaksHandlerSorting extends InvTweaksObfuscation {
                             if(isItemArmor(currentArmor)) {
                                 // ItemArmor
                                 // ItemArmor
-                                int armorLevel = ((ItemArmor) currentArmor).damageReduceAmount;
+                                int armorLevel = ((ArmorItem) currentArmor).protection;
                                 // ItemArmor
                                 // ItemArmor
-                                if(armorLevel < fromItemArmor.damageReduceAmount || (armorLevel == fromItemArmor.damageReduceAmount && slot
+                                if(armorLevel < fromItemArmor.protection || (armorLevel == fromItemArmor.protection && slot
                                         .getStack().getItemDamage() < from.getItemDamage())) {
                                     move = true;
                                 }
@@ -370,7 +370,7 @@ public class InvTweaksHandlerSorting extends InvTweaksObfuscation {
             //skip hacked itemstacks that are larger than their max size
             //no idea why they would be here, but may as well account for them anyway
             // TODO: ResourceLocation
-            if(numPerSlot <= new ItemStack(Item.REGISTRY.getObject(new ResourceLocation(item.getLeft())), 1, 0).getMaxStackSize()) {
+            if(numPerSlot <= new ItemStack(Item.REGISTRY.getObject(new Identifier(item.getLeft())), 1, 0).getMaxStackSize()) {
                 //linkedlists to store which stacks have too many/few items
                 @NotNull LinkedList<Integer> smallStacks = new LinkedList<>();
                 @NotNull LinkedList<Integer> largeStacks = new LinkedList<>();

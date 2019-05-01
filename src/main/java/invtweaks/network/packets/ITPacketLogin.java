@@ -3,7 +3,7 @@ package invtweaks.network.packets;
 import invtweaks.InvTweaksConst;
 import invtweaks.forge.InvTweaksMod;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.INetHandler;
+import net.minecraft.network.listener.PacketListener;
 import org.jetbrains.annotations.NotNull;
 
 public class ITPacketLogin implements ITPacket {
@@ -20,7 +20,7 @@ public class ITPacketLogin implements ITPacket {
     }
 
     @Override
-    public void handle(INetHandler handler) {
+    public void handle(PacketListener handler) {
         if(protocolVersion == InvTweaksConst.PROTOCOL_VERSION) {
             InvTweaksMod.proxy.setServerHasInvTweaks(true);
         }

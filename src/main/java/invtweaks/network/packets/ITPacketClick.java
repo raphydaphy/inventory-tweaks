@@ -1,23 +1,23 @@
 package invtweaks.network.packets;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.container.SlotActionType;
+import net.minecraft.network.listener.PacketListener;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class ITPacketClick implements ITPacket {
     public int slot;
     public int data;
-    public ClickType action;
+    public SlotActionType action;
     public int window;
 
     @SuppressWarnings("unused")
     public ITPacketClick() {
     }
 
-    public ITPacketClick(int _slot, int _data, ClickType _action, int _window) {
+    public ITPacketClick(int _slot, int _data, SlotActionType _action, int _window) {
         slot = _slot;
         data = _data;
         action = _action;
@@ -28,7 +28,7 @@ public class ITPacketClick implements ITPacket {
     public void readBytes(@NotNull ByteBuf bytes) {
         slot = bytes.readInt();
         data = bytes.readInt();
-        action = ClickType.values()[bytes.readInt()];
+        action = SlotActionType.values()[bytes.readInt()];
         window = bytes.readByte();
     }
 
@@ -41,13 +41,13 @@ public class ITPacketClick implements ITPacket {
     }
 
     @Override
-    public void handle(INetHandler handler) {
-        if(handler instanceof NetHandlerPlayServer) {
-            @NotNull NetHandlerPlayServer serverHandler = (NetHandlerPlayServer) handler;
-            EntityPlayerMP player = serverHandler.player;
+    public void handle(PacketListener handler) {
+        if(handler instanceof ServerPlayNetworkHandler) {
+            @NotNull ServerPlayNetworkHandler serverHandler = (ServerPlayNetworkHandler) handler;
+            ServerPlayerEntity player = serverHandler.player;
 
-            if(player.openContainer.windowId == window) {
-                player.openContainer.slotClick(slot, data, action, player);
+            if(player.container.syncId == window) {
+                player.container.slotClick(slot, data, action, player);
             }
             // TODO: Might want to set a flag to ignore all packets until next sortcomplete even if client window changes.
         }

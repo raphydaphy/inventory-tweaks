@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "inventorytweaks",
+  "name": "Inventory Tweaks",
+  "version": "${version}",
+
+  "side": "universal",
+  "entrypoints": {
+    "main": [
+      "invtweaks.InvTweaksEntryPoint"
+    ]
+  },
+  "requires": {
+    "fabricloader": ">=0.4.0",
+	"fabric": "*"
+  },
+  "mixins": [
+	"mixins.invtweaks.json"
+  ],
+
+  "authors": [
+    "Kobata"
+  ],
+  "contributors": [
+    "rjaphydaphy"
+  ],
+  "licence": "MIT",
+  "description": "A magic mod with immersive progression focussed on a story.\n\nProgrammed and designed by raphydaphy with contributions from Thiakil and B0undaryBreaker and textures by wiiv. Sound effects are sourced from https://www.zapsplat.com.",
+  "icon": "assets/invtweaks/icon.png"
+}

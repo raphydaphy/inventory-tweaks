@@ -1,8 +1,5 @@
 package invtweaks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.resources.I18n;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.List;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.util.Identifier;
 
 /**
  * Handles the (re)loading of the configuration, and all that is related to file extraction/moves.
@@ -21,7 +21,7 @@ public class InvTweaksConfigManager {
 
     private static final Logger log = InvTweaks.log;
 
-    private final Minecraft mc;
+    private final MinecraftClient mc;
 
     /**
      * The mod's configuration.
@@ -35,7 +35,7 @@ public class InvTweaksConfigManager {
     @Nullable
     private InvTweaksHandlerShortcuts shortcutsHandler = null;
 
-    public InvTweaksConfigManager(Minecraft mc_) {
+    public InvTweaksConfigManager(MinecraftClient mc_) {
         mc = mc_;
     }
 
@@ -225,7 +225,7 @@ public class InvTweaksConfigManager {
         }
     }
 
-    private boolean extractFile(@NotNull ResourceLocation resource, @NotNull File destination) {
+    private boolean extractFile(@NotNull Identifier resource, @NotNull File destination) {
         try(@NotNull InputStream input = mc.getResourceManager().getResource(resource).getInputStream()) {
             try {
                 FileUtils.copyInputStreamToFile(input, destination);

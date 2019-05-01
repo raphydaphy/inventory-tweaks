@@ -2,12 +2,12 @@ package invtweaks;
 
 import invtweaks.api.container.ContainerSection;
 import invtweaks.container.ContainerSectionManager;
-import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.TimeoutException;
+import net.minecraft.client.MinecraftClient;
 
 /**
  * Button that opens the inventory & chest settings screen.
@@ -24,7 +24,7 @@ public class InvTweaksGuiSettingsButton extends InvTweaksGuiIconButton {
     }
 
     @Override
-    public void drawButton(@NotNull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+    public void drawButton(@NotNull MinecraftClient mc, int mouseX, int mouseY, float partialTicks) {
         super.drawButton(mc, mouseX, mouseY, partialTicks);
 
         // Display string
@@ -37,7 +37,7 @@ public class InvTweaksGuiSettingsButton extends InvTweaksGuiIconButton {
      * Displays inventory settings GUI
      */
     @Override
-    public boolean mousePressed(Minecraft minecraft, int i, int j) {
+    public boolean mousePressed(MinecraftClient minecraft, int i, int j) {
 
         @NotNull InvTweaksObfuscation obf = new InvTweaksObfuscation(minecraft);
         @Nullable InvTweaksConfig config = cfgManager.getConfig();

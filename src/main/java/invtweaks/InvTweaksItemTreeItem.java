@@ -1,12 +1,12 @@
 package invtweaks;
 
 import invtweaks.api.IItemTreeItem;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.TagHelper;
 
 /**
  * Representation of an item in the item tree.
@@ -19,7 +19,7 @@ public class InvTweaksItemTreeItem implements IItemTreeItem {
     @Nullable
     private String id;
     private int damage;
-    private NBTTagCompound extraData;
+    private CompoundTag extraData;
     private int order;
 
     /**
@@ -28,7 +28,7 @@ public class InvTweaksItemTreeItem implements IItemTreeItem {
      * @param damage_ The item variant or InvTweaksConst.DAMAGE_WILDCARD
      * @param order_  The item order while sorting
      */
-    public InvTweaksItemTreeItem(String name_, String id_, int damage_, NBTTagCompound extraData_, int order_) {
+    public InvTweaksItemTreeItem(String name_, String id_, int damage_, CompoundTag extraData_, int order_) {
         name = name_;
         id = InvTweaksObfuscation.getNamespacedID(id_);
         damage = damage_;
@@ -53,7 +53,7 @@ public class InvTweaksItemTreeItem implements IItemTreeItem {
     }
 
     @Override
-    public NBTTagCompound getExtraData() {
+    public CompoundTag getExtraData() {
         return extraData;
     }
 
@@ -72,7 +72,7 @@ public class InvTweaksItemTreeItem implements IItemTreeItem {
         }
         @Nullable IItemTreeItem item = (IItemTreeItem) o;
         return Objects.equals(id, item.getId())
-                && NBTUtil.areNBTEquals(extraData, item.getExtraData(), true)
+                && TagHelper.areNBTEquals(extraData, item.getExtraData(), true)
                 && (damage == InvTweaksConst.DAMAGE_WILDCARD || damage == item.getDamage());
     }
 

@@ -1,15 +1,15 @@
 package invtweaks;
 
 import invtweaks.forge.InvTweaksMod;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.util.Point;
 
 import java.awt.*;
 import java.util.List;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 
 /**
  * The inventory and chest advanced settings menu.
@@ -30,7 +30,7 @@ public class InvTweaksGuiSettingsAdvanced extends InvTweaksGuiSettingsAbstract {
     private static String labelEnableSounds;
     private static String labelServerAssist;
 
-    public InvTweaksGuiSettingsAdvanced(Minecraft mc_, GuiScreen parentScreen_, InvTweaksConfig config_) {
+    public InvTweaksGuiSettingsAdvanced(MinecraftClient mc_, Screen parentScreen_, InvTweaksConfig config_) {
         super(mc_, parentScreen_, config_);
 
         labelSortOnPickup = I18n.format("invtweaks.settings.advanced.sortonpickup");
@@ -44,14 +44,14 @@ public class InvTweaksGuiSettingsAdvanced extends InvTweaksGuiSettingsAbstract {
     public void initGui() {
         super.initGui();
 
-        List<GuiButton> controlList = buttonList;
-        @NotNull Point p = new Point();
+        List<ButtonWidget> controlList = buttonList;
+        @NotNull java.awt.Point p = new java.awt.Point();
         int i = 0;
 
         // Create large buttons
 
         moveToButtonCoords(1, p);
-        controlList.add(new GuiButton(ID_EDITSHORTCUTS, p.getX() + 55, height / 6 + 144,
+        controlList.add(new ButtonWidget(ID_EDITSHORTCUTS, p.getX() + 55, height / 6 + 144,
                 I18n.format("invtweaks.settings.advanced.mappingsfile")));
 
         // Create settings buttons
@@ -125,7 +125,7 @@ public class InvTweaksGuiSettingsAdvanced extends InvTweaksGuiSettingsAbstract {
     }
 
     @Override
-    protected void actionPerformed(@NotNull GuiButton guibutton) {
+    protected void actionPerformed(@NotNull ButtonWidget guibutton) {
 
         // GuiButton
         switch(guibutton.id) {

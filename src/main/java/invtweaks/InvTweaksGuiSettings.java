@@ -1,15 +1,15 @@
 package invtweaks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.util.Point;
 
 import java.awt.*;
 import java.net.URL;
 import java.util.List;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 
 /**
  * The inventory and chest settings menu.
@@ -36,37 +36,37 @@ public class InvTweaksGuiSettings extends InvTweaksGuiSettingsAbstract {
     private static String labelBugSorting;
 
     @SuppressWarnings("unused")
-    public InvTweaksGuiSettings(GuiScreen parentScreen_) {
-        this(Minecraft.getMinecraft(), parentScreen_, InvTweaks.getConfigManager().getConfig());
+    public InvTweaksGuiSettings(Screen parentScreen_) {
+        this(MinecraftClient.getMinecraft(), parentScreen_, InvTweaks.getConfigManager().getConfig());
     }
 
-    public InvTweaksGuiSettings(Minecraft mc_, GuiScreen parentScreen_, InvTweaksConfig config_) {
+    public InvTweaksGuiSettings(MinecraftClient mc_, Screen parentScreen_, InvTweaksConfig config_) {
         super(mc_, parentScreen_, config_);
 
-        labelMiddleClick = I18n.format("invtweaks.settings.middleclick");
-        labelShortcuts = I18n.format("invtweaks.settings.shortcuts");
-        labelAutoRefill = I18n.format("invtweaks.settings.autorefill");
-        labelAutoRefillBeforeBreak = I18n.format("invtweaks.settings.beforebreak");
-        labelMoreOptions = I18n.format("invtweaks.settings.moreoptions");
-        labelBugSorting = I18n.format("invtweaks.help.bugsorting");
+        labelMiddleClick = I18n.translate("invtweaks.settings.middleclick");
+        labelShortcuts = I18n.translate("invtweaks.settings.shortcuts");
+        labelAutoRefill = I18n.translate("invtweaks.settings.autorefill");
+        labelAutoRefillBeforeBreak = I18n.translate("invtweaks.settings.beforebreak");
+        labelMoreOptions = I18n.translate("invtweaks.settings.moreoptions");
+        labelBugSorting = I18n.translate("invtweaks.help.bugsorting");
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        List<GuiButton> controlList = buttonList;
-        @NotNull Point p = new Point();
+        List<ButtonWidget> controlList = buttonList;
+        @NotNull java.awt.Point p = new java.awt.Point();
         int i = 0;
 
         // Create large buttons
 
         moveToButtonCoords(1, p);
-        controlList.add(new GuiButton(ID_EDITRULES, p.getX() + 55, height / 6 + 96,
+        controlList.add(new ButtonWidget(ID_EDITRULES, p.getX() + 55, height / 6 + 96,
                 I18n.format("invtweaks.settings.rulesfile")));
-        controlList.add(new GuiButton(ID_EDITTREE, p.getX() + 55, height / 6 + 120,
+        controlList.add(new ButtonWidget(ID_EDITTREE, p.getX() + 55, height / 6 + 120,
                 I18n.format("invtweaks.settings.treefile")));
-        controlList.add(new GuiButton(ID_HELP, p.getX() + 55, height / 6 + 144,
+        controlList.add(new ButtonWidget(ID_HELP, p.getX() + 55, height / 6 + 144,
                 I18n.format("invtweaks.settings.onlinehelp")));
 
         // Create settings buttons
@@ -132,7 +132,7 @@ public class InvTweaksGuiSettings extends InvTweaksGuiSettingsAbstract {
     }
 
     @Override
-    protected void actionPerformed(@NotNull GuiButton guibutton) {
+    protected void actionPerformed(@NotNull ButtonWidget guibutton) {
         super.actionPerformed(guibutton);
 
         // GuiButton

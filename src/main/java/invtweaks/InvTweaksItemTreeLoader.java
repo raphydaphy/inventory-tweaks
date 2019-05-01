@@ -1,9 +1,9 @@
 package invtweaks;
 
 import invtweaks.api.IItemTreeListener;
-import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.StringNbtReader;
 import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -140,10 +140,10 @@ public class InvTweaksItemTreeLoader extends DefaultHandler {
             String id = attributes.getValue(ATTR_ID);
             int damage = InvTweaksConst.DAMAGE_WILDCARD;
             String extraDataAttr = attributes.getValue(ATTR_DATA);
-            @Nullable NBTTagCompound extraData = null;
+            @Nullable CompoundTag extraData = null;
             if(extraDataAttr != null) {
                 try {
-                    extraData = JsonToNBT.getTagFromJson(extraDataAttr);
+                    extraData = StringNbtReader.getTagFromJson(extraDataAttr);
                 } catch(NBTException e) {
                     throw new RuntimeException("Data attribute failed for tree entry '" + name + "'", e);
                 }

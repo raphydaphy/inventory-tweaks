@@ -7,13 +7,13 @@ import invtweaks.api.container.ContainerSection;
 import invtweaks.network.ITPacketHandlerClient;
 import invtweaks.network.packets.ITPacketClick;
 import invtweaks.network.packets.ITPacketSortComplete;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.options.KeyBinding;
+import net.minecraft.container.Container;
+import net.minecraft.container.SlotActionType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -46,7 +46,7 @@ public class ClientProxy extends CommonProxy {
 
         invtweaksChannel.get(Side.CLIENT).pipeline().addAfter("ITMessageToMessageCodec#0", "InvTweaks Handler Client", new ITPacketHandlerClient());
 
-        Minecraft mc = FMLClientHandler.instance().getClient();
+        MinecraftClient mc = FMLClientHandler.instance().getClient();
         // Instantiate mod core
         instance = new InvTweaks(mc);
 
@@ -56,7 +56,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onTick(@NotNull TickEvent.ClientTickEvent tick) {
         if(tick.phase == TickEvent.Phase.START) {
-            Minecraft mc = FMLClientHandler.instance().getClient();
+            MinecraftClient mc = FMLClientHandler.instance().getClient();
             if(mc.world != null && mc.player != null) {
                 if(mc.currentScreen != null) {
                     instance.onTickInGUI(mc.currentScreen);
@@ -88,11 +88,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void slotClick(@NotNull PlayerControllerMP playerController, int windowId, int slot, int data, @NotNull ClickType action,
-                          @NotNull EntityPlayer player) {
+    public void slotClick(@NotNull ClientPlayerInteractionManager playerController, int windowId, int slot, int data, @NotNull SlotActionType action,
+                          @NotNull PlayerEntity player) {
         //int modiferKeys = (shiftHold) ? 1 : 0 /* XXX Placeholder */;
         if(serverSupportEnabled) {
-            player.openContainer.slotClick(slot, data, action, player);
+            player.container.slotClick(slot, data, action, player);
 
             invtweaksChannel.get(Side.CLIENT).writeOutbound(new ITPacketClick(slot, data, action, windowId));
         } else {
@@ -135,10 +135,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void sort(ContainerSection section, SortingMethod method) {
         // TODO: This seems like something useful enough to be a util method somewhere.
-        Minecraft mc = FMLClientHandler.instance().getClient();
-        Container currentContainer = mc.player.inventoryContainer;
+        MinecraftClient mc = FMLClientHandler.instance().getClient();
+        Container currentContainer = mc.player.playerContainer;
         if(InvTweaksObfuscation.isGuiContainer(mc.currentScreen)) {
-            currentContainer = ((GuiContainer) mc.currentScreen).inventorySlots;
+            currentContainer = ((ContainerScreen) mc.currentScreen).container;
         }
 
         try {
@@ -151,7 +151,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void addClientScheduledTask(@NotNull Runnable task) {
-        Minecraft.getMinecraft().addScheduledTask(task);
+        MinecraftClient.getMinecraft().addScheduledTask(task);
     }
 
     @SubscribeEvent

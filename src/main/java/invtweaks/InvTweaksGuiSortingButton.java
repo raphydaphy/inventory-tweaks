@@ -2,7 +2,7 @@ package invtweaks;
 
 import invtweaks.api.SortingMethod;
 import invtweaks.api.container.ContainerSection;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +26,7 @@ public class InvTweaksGuiSortingButton extends InvTweaksGuiIconButton {
     }
 
     @Override
-    public void drawButton(@NotNull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+    public void drawButton(@NotNull MinecraftClient mc, int mouseX, int mouseY, float partialTicks) {
         super.drawButton(mc, mouseX, mouseY, partialTicks);
 
         // Display symbol
@@ -59,7 +59,7 @@ public class InvTweaksGuiSortingButton extends InvTweaksGuiIconButton {
      * Sort container
      */
     @Override
-    public boolean mousePressed(Minecraft minecraft, int i, int j) {
+    public boolean mousePressed(MinecraftClient minecraft, int i, int j) {
         if(super.mousePressed(minecraft, i, j)) {
             try {
                 new InvTweaksHandlerSorting(minecraft, cfgManager.getConfig(), section, algorithm, rowSize).sort();

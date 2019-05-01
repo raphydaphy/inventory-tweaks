@@ -4,8 +4,8 @@ import invtweaks.InvTweaks;
 import invtweaks.InvTweaksObfuscation;
 import invtweaks.api.container.ContainerSection;
 import invtweaks.forge.InvTweaksMod;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.container.Container;
+import net.minecraft.container.Slot;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class MirroredContainerManager implements IContainerManager {
         }
 
         // TODO: Detect if there is a big enough unassigned section for inventory.
-        List<Slot> slots = container.inventorySlots;
+        List<Slot> slots = container.slotList;
         int size = slots.size();
 
         itemRefs = new HashMap<>();

@@ -4,8 +4,8 @@ import invtweaks.InvTweaks;
 import invtweaks.InvTweaksObfuscation;
 import invtweaks.api.container.ContainerSection;
 import invtweaks.forge.InvTweaksMod;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.container.Container;
+import net.minecraft.container.Slot;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -209,7 +209,7 @@ public class DirectContainerManager implements IContainerManager {
         if(slot != -1) {
             int data = (rightClick) ? 1 : 0;
             InvTweaksMod.proxy
-                    .slotClick(InvTweaks.getInstance().getPlayerController(), container.windowId, slot, data, PICKUP,
+                    .slotClick(InvTweaks.getInstance().getPlayerController(), container.syncId, slot, data, field_7790,
                             InvTweaks.getInstance().getThePlayer());
         }
     }
@@ -336,7 +336,7 @@ public class DirectContainerManager implements IContainerManager {
     @Override
     public ItemStack getItemStack(ContainerSection section, int index) {
         int slot = indexToSlot(section, index);
-        if(slot >= 0 && slot < container.inventorySlots.size()) {
+        if(slot >= 0 && slot < container.slotList.size()) {
             return InvTweaksObfuscation.getSlotStack(container, slot);
         } else {
             return ItemStack.EMPTY;

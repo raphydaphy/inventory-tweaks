@@ -3,12 +3,12 @@ package invtweaks;
 import invtweaks.api.IItemTreeItem;
 import invtweaks.api.container.ContainerSection;
 import invtweaks.container.ContainerSectionManager;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public class InvTweaksHandlerAutoRefill extends InvTweaksObfuscation {
     @NotNull
     private InvTweaksConfig config;
 
-    public InvTweaksHandlerAutoRefill(Minecraft mc_, @NotNull InvTweaksConfig config_) {
+    public InvTweaksHandlerAutoRefill(MinecraftClient mc_, @NotNull InvTweaksConfig config_) {
         super(mc_);
         config = config_;
     }
@@ -55,7 +55,7 @@ public class InvTweaksHandlerAutoRefill extends InvTweaksObfuscation {
         boolean hasSubtypes = false;
 
         // TODO: ResourceLocation
-        @Nullable Item original = Item.REGISTRY.getObject(new ResourceLocation(wantedId));
+        @Nullable Item original = Item.REGISTRY.getObject(new Identifier(wantedId));
         if(original != null) {
             hasSubtypes = original.getHasSubtypes();
         }
@@ -206,7 +206,7 @@ public class InvTweaksHandlerAutoRefill extends InvTweaksObfuscation {
                             if(!config.getProperty(InvTweaksConfig.PROP_ENABLE_SOUNDS)
                                     .equals(InvTweaksConfig.VALUE_FALSE)) {
                                 mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
-                                        SoundEvents.ENTITY_CHICKEN_EGG, 1.0F));
+                                        SoundEvents.field_15219, 1.0F));
                             }
                             // If item are swapped (like for mushroom soups),
                             // put the item back in the inventory if it is in the hotbar
